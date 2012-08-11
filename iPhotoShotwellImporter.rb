@@ -88,6 +88,7 @@ end
 class ShotwellLib
 	def initialize(db)
 		@db = SQLite3::Database.new db
+		@log= File.open("import.log","w")
 	end
 	def addEvent(nomEvent)
 		@db.execute("insert into EventTable(name) values(:nomEvent)","nomEvent" => nomEvent)
@@ -111,6 +112,7 @@ class ShotwellLib
 		fileName.gsub!("ï","ï")
 		fileName.gsub!("É","É")
 		fileName.gsub!("é","é")
+		@log.puts(fileName)
 		f=File.open(fileName)
 		is=ImageSize.new(f.read).get_size
 		f.close
