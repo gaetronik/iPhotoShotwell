@@ -59,3 +59,8 @@ Todo
 * Add option for moving files
 * Have a report of what files remind
 * Add an option to choose Modified file rather than Original one
+
+Licence
+---
+
+WTFPL http://sam.zoy.org/wtfpl/
