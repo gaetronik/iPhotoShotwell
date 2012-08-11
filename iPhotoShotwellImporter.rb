@@ -1,5 +1,9 @@
 #!/usr/bin/ruby
 
+#Author: Gaëtan Duchaussois
+#Licence: WTFPL
+#Usage: ruby iPhotoShotwell.rb pathToAlbumData.xml pathToShotwellDB.db
+
 require 'nokogiri'
 require "sqlite3"
 require 'image_size'
@@ -121,7 +125,7 @@ class ShotwellLib
 end
 
 ip=IphotoLib.new(ARGV[0])
-sw=ShotwellLib.new("/home/gaetan/.shotwell/data/photo.db")
+sw=ShotwellLib.new(ARGV[1])
 #ip.getAlbum.each do |album|
 #	p album
 #end/
