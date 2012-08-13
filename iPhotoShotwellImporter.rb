@@ -7,6 +7,7 @@
 require 'nokogiri'
 require "sqlite3"
 require 'image_size'
+require 'fileutils'
 
 class IphotoLib
 	def initialize(file)
@@ -106,13 +107,21 @@ class ShotwellLib
 		#p vInfo
 		@db.execute("insert into VideoTable(filename,width,height,clip_duration,event_id) values(:fileName,:width,:height,:duration,:event);","fileName"=>fileName,"width"=> vInfo["ID_VIDEO_WIDTH"], "height" => vInfo["ID_VIDEO_HEIGHT"], "event"=> event, "duration"=> vInfo["ID_LENGTH"])
 	end
-	def addImage(fileName,event=nil)
-		puts fileName
+	def addImage(fileName,event=nil,move=false,path=ENV['HOME']+"/Images")
+		#puts fileName
 		fileName.gsub!("û","û")
 		fileName.gsub!("ï","ï")
 		fileName.gsub!("É","É")
 		fileName.gsub!("é","é")
 		@log.puts(fileName)
+		if move then
+			basename=File.basename(fileName)
+			dirname=File.dirname(fileName)
+			arbo=dirname.split(/\//)[-2..-1].join('/')
+			FileUtils.mkdir_p(File.join(path,arbo))
+			FileUtils.mv(fileName,File.join(path,arbo,basename))
+			fileName=File.join(path,arbo,basename)
+		end
 		f=File.open(fileName)
 		is=ImageSize.new(f.read).get_size
 		f.close
@@ -150,7 +159,6 @@ sw=ShotwellLib.new(ARGV[1])
 ip.getAlbum.each do |ev|
 	eid=sw.addEvent(ev["RollName"])
 	ev["KeyList"].each do |img|
-		puts img
-		sw.addImage(ip.getCurrPath(img.to_i,"Original"),eid)
+		sw.addImage(ip.getCurrPath(img.to_i,"Original"),eid,true)
 	end
 end
